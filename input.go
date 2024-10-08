@@ -1,37 +1,35 @@
 package main
 
 import (
-	"golang.org/x/term"
-	"os"
+	"fmt"
 )
 
-// checkInput listens for user input in raw mode
+// checkInput handles keyboard input
 func checkInput() {
-	// Set the terminal to raw mode
-	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
-	if err != nil {
-		return // If there's an error, exit the function
+	var input string
+	for running {
+		fmt.Scan(&input) // Read input from the console
+		switch input {
+		case "q":
+			running = false // Quit the game
+		case "a":
+			moveX(-1) // Move left on 'a'
+		case "d":
+			moveX(1) // Move right on 'd'
+		}
 	}
-	defer func(fd int, oldState *term.State) {
-		err := term.Restore(fd, oldState)
-		if err != nil {
+}
 
-		}
-	}(int(os.Stdin.Fd()), oldState) // Restore the old terminal settings when done
-
-	for {
-		// Read a single byte from standard input
-		var b [1]byte
-		_, err := os.Stdin.Read(b[:])
-		if err != nil {
-			return // Exit if there's an error reading input
-		}
-
-		mu.Lock()
-		// Check if the input character is 'q'
-		if b[0] == 'q' {
-			running = false // Set running to false to exit the game loop
-		}
-		mu.Unlock()
+// moveX updates the position of 'X' based on input
+func moveX(direction int) {
+	mu.Lock()
+	// Update xPos based on direction
+	if direction == -1 && xPos > 0 { // Move left
+		xPos--
+		hasChanged = true
+	} else if direction == 1 && xPos < width-1 { // Move right
+		xPos++
+		hasChanged = true
 	}
+	mu.Unlock()
 }

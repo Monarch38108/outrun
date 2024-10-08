@@ -7,31 +7,38 @@ import (
 )
 
 const (
-	width  = 40 // Width of the Screen
-	height = 20 // Height if the Screen
+	width  = 40 // Width of the screen
+	height = 20 // Height of the screen
 )
 
 var (
-	running     bool                // Flag to indicate if the game is running
-	mu          sync.Mutex          // Mutex to synchronize access to shared variables
+	running     bool
+	mu          sync.Mutex
 	framebuffer [height][width]rune // Framebuffer to hold the current state of the screen
-	lastFrame   [height][width]rune // Last rendered frame for comparison
+	hasChanged  bool                // Flag to check if there are any changes
+	xPos        int                 // Current x position of 'X'
+	yPos        int                 // Current y position of 'X'
 )
 
 func main() {
-	running = true  // Set the game state to running
+	running = true
+	xPos = 5 // Start position of X
+	yPos = 5 // Start position of Y
+
 	go checkInput() // Start the input checking in a separate goroutine
 
-	// Main Gameloop
+	// Main game loop
 	for running {
 		mu.Lock()
-		updateFrame()
-		renderFrame()
+		updateFrame()   // Update the framebuffer with the current game state
+		if hasChanged { // Only render if there are changes
+			renderFrame()      // Render the framebuffer to the console
+			hasChanged = false // Reset the change flag
+		}
 		mu.Unlock()
 
 		time.Sleep(100 * time.Millisecond) // Control the game update rate
-		clearScreen()                      // Clear the Screen to show the next frame
 	}
 
-	fmt.Println("Game ended.") // Display end message (debug)
+	fmt.Println("Game ended.")
 }
