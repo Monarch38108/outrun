@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	width  = 40
-	height = 20
+	width  = 100
+	height = 30
 )
 
 var (
@@ -39,7 +39,7 @@ func main() {
 		}
 		mu.Unlock()
 
-		time.Sleep(100 * time.Millisecond) // Control the game update rate
+		time.Sleep(16 * time.Millisecond) // Control the game update rate
 	}
 
 	fmt.Println("Game ended.")
