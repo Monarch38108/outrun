@@ -38,3 +38,17 @@ func renderFrame() {
 		}
 	}
 }
+
+// updateFrame updates the framebuffer with the current game state
+func updateFrame() {
+	// Example: Fill the framebuffer with a character for testing
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			framebuffer[y][x] = ' ' // Clear the framebuffer
+			// Gamelogic area
+			if x == 5 && y == 5 {
+				framebuffer[y][x] = '#'
+			}
+		}
+	}
+}
