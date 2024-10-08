@@ -5,31 +5,32 @@ import (
 	"os"
 )
 
+// checkInput listens for user input in raw mode
 func checkInput() {
-	// Terminal in den Raw-Modus versetzen
+	// Set the terminal to raw mode
 	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
-		return
+		return // If there's an error, exit the function
 	}
 	defer func(fd int, oldState *term.State) {
 		err := term.Restore(fd, oldState)
 		if err != nil {
 
 		}
-	}(int(os.Stdin.Fd()), oldState) // Stelle die alte Terminal-Konfiguration wieder her
+	}(int(os.Stdin.Fd()), oldState) // Restore the old terminal settings when done
 
 	for {
-		// Lese ein Byte
+		// Read a single byte from standard input
 		var b [1]byte
 		_, err := os.Stdin.Read(b[:])
 		if err != nil {
-			return
+			return // Exit if there's an error reading input
 		}
 
 		mu.Lock()
-		// Überprüfe, ob das eingegebene Zeichen 'q' ist
+		// Check if the input character is 'q'
 		if b[0] == 'q' {
-			running = false
+			running = false // Set running to false to exit the game loop
 		}
 		mu.Unlock()
 	}
