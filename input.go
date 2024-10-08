@@ -11,7 +11,12 @@ func checkInput() {
 	if err != nil {
 		return
 	}
-	defer term.Restore(int(os.Stdin.Fd()), oldState) // Stelle die alte Terminal-Konfiguration wieder her
+	defer func(fd int, oldState *term.State) {
+		err := term.Restore(fd, oldState)
+		if err != nil {
+
+		}
+	}(int(os.Stdin.Fd()), oldState) // Stelle die alte Terminal-Konfiguration wieder her
 
 	for {
 		// Lese ein Byte
