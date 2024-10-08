@@ -6,9 +6,16 @@ import (
 	"time"
 )
 
+const (
+	width  = 40 // Width of the Screen
+	height = 20 // Height if the Screen
+)
+
 var (
-	running bool       // Flag to indicate if the game is running
-	mu      sync.Mutex // Mutex to synchronize access to shared variables
+	running     bool                // Flag to indicate if the game is running
+	mu          sync.Mutex          // Mutex to synchronize access to shared variables
+	framebuffer [height][width]rune // Framebuffer to hold the current state of the screen
+	lastFrame   [height][width]rune // Last rendered frame for comparison
 )
 
 func main() {
@@ -18,7 +25,8 @@ func main() {
 	// Main Gameloop
 	for running {
 		mu.Lock()
-		fmt.Println("Game is running...") // Display the game status (debug)
+		updateFrame()
+		renderFrame()
 		mu.Unlock()
 
 		time.Sleep(100 * time.Millisecond) // Control the game update rate
