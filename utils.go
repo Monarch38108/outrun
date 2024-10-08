@@ -10,10 +10,16 @@ func clearScreen() {
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command("cmd", "/c", "cls")
 		cmd.Stdout = os.Stdout
-		cmd.Run()
+		err := cmd.Run()
+		if err != nil {
+			return
+		}
 	} else {
 		cmd := exec.Command("clear")
 		cmd.Stdout = os.Stdout
-		cmd.Run()
+		err := cmd.Run()
+		if err != nil {
+			return
+		}
 	}
 }
