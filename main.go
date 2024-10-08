@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	width  = 40 // Width of the screen
-	height = 20 // Height of the screen
+	width  = 40
+	height = 20
 )
 
 var (
@@ -24,6 +24,8 @@ func main() {
 	running = true
 	xPos = 5 // Start position of X
 	yPos = 5 // Start position of Y
+
+	fmt.Print("\033[?25l")
 
 	go checkInput() // Start the input checking in a separate goroutine
 
